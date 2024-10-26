@@ -35,9 +35,10 @@ export async function GET(req) {
     } else {
       // const [rows] = await db.execute("SELECT * FROM lot_detail");
       const [rows] = await db.execute(
-        `SELECT ld.*, bd.bd_current_bid, bd.bd_handle
+        `SELECT ld.*, bd.bd_current_bid, bd.bd_handle, ad.auct_status, ad.end_date
         FROM lot_detail AS ld
-        LEFT JOIN bid_display AS bd ON ld.lot_id = bd.bd_lot_id`
+        LEFT JOIN bid_display AS bd ON ld.lot_id = bd.bd_lot_id
+        LEFT JOIN auction_detail AS ad ON ld.lot_auct_id = ad.auct_id`
       );
       return NextResponse.json({ data: rows }, { status: 200 });
     }

@@ -9,9 +9,11 @@ import "./AuctionPrData.css";
 import { toast } from "react-toastify";
 import * as XLSX from "xlsx";
 import FormModal from "@/components/swal-fire-model/FormModal";
+import { useRouter } from "next/navigation";
 
 const AuctionPrData = ({ auctionId }) => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const { data, loading, error } = useSelector(
     (state) => state.tablesData.alllots
   );
@@ -25,18 +27,17 @@ const AuctionPrData = ({ auctionId }) => {
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const [newBid, setNewBid] = useState('');
-  const [newHandleName, setNewHandleName] = useState('');
+  const [newBid, setNewBid] = useState("");
+  const [newHandleName, setNewHandleName] = useState("");
   const [lotData, setLotData] = useState({});
   const [compLoading, setCompLoading] = useState(false);
-
 
   // Function to open the modal
   const openModal = (lot) => {
     console.log("opened", lot);
     setLotData(lot);
-    setNewBid('');
-    setNewHandleName('');
+    setNewBid("");
+    setNewHandleName("");
     setIsOpen(true);
   };
 
@@ -97,81 +98,87 @@ const AuctionPrData = ({ auctionId }) => {
     // XLSX.writeFile(workbook, `auctionData.xlsx`);
   };
 
-
-
   const handleNewBidSubmit = async (e) => {
     e.preventDefault();
 
     // bid should be greater than current bi
-    if(Number(newBid) < (lotData?.bd_current_bid ? lotData?.bd_current_bid : lotData?.lot_est_min_bid) ) {
-        return toast.error(`Bid should be greater than ₹ ${lotData?.bd_current_bid ? lotData?.bd_current_bid : lotData?.lot_est_min_bid}`, {position: 'top-right'});
+    if (
+      Number(newBid) <
+      (lotData?.bd_current_bid
+        ? lotData?.bd_current_bid
+        : lotData?.lot_est_min_bid)
+    ) {
+      return toast.error(
+        `Bid should be greater than ₹ ${
+          lotData?.bd_current_bid
+            ? lotData?.bd_current_bid
+            : lotData?.lot_est_min_bid
+        }`,
+        { position: "top-right" }
+      );
     }
 
     // new user detail on behalf of whom admin is placing bid
-    const userDetails = await allUsers.data.find(user => user.handlename === newHandleName);
-    
+    const userDetails = await allUsers.data.find(
+      (user) => user.handlename === newHandleName
+    );
+
     if (userDetails) {
+      const token = localStorage.getItem("token");
 
-        const token = localStorage.getItem("token");
+      // if no token then redirect to admin login
+      if (!token) {
+        toast.error("Session Expired, Please Login", { position: "top-right" });
+        setCompLoading(false);
+        return router.push("/admin");
+      }
+      setCompLoading(true);
+      try {
+        const formDataToSend = new FormData();
+        formDataToSend.append("bidAuctId", lotData?.lot_auct_id);
+        formDataToSend.append("bidLotId", lotData?.lot_id);
+        formDataToSend.append("bidOwnerId", userDetails?.id);
+        formDataToSend.append("bidBidderHandle", userDetails?.handlename);
+        formDataToSend.append("bidAmt", newBid);
+        formDataToSend.append("isBooked", false);
+        formDataToSend.append("nextBidAmt", lotData?.lot_min_incr);
 
-        // if no token then redirect to admin login
-          if (!token) {
-              toast.error("Session Expired, Please Login", { position: "top-right" });
-              setLoading(false);
-              return router.push("/admin");
-          }
-          setCompLoading(true);
-          try {
-            
-            const formDataToSend = new FormData();
-            formDataToSend.append("bidAuctId", lotData?.lot_auct_id);
-            formDataToSend.append("bidLotId", lotData?.lot_id);
-            formDataToSend.append("bidOwnerId", userDetails?.id);
-            formDataToSend.append("bidBidderHandle", userDetails?.handlename);
-            formDataToSend.append("bidAmt", newBid);
-            formDataToSend.append("isBooked", false);
-            formDataToSend.append("nextBidAmt", lotData?.lot_min_incr);
+        const response = await fetch(`/api/admin/place-bid`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formDataToSend,
+        });
 
-            const response = await fetch(`/api/admin/place-bid`, {
-                method: "POST",
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-                body: formDataToSend,
-              });
-    
-              if (response.status === 401) {
-                  // Token is expired or invalid
-                  console.log("Token expired");
-                  localStorage.removeItem("token"); // Remove the expired token
-                  return router.push("/admin"); 
-              }
+        if (response.status === 401) {
+          // Token is expired or invalid
+          console.log("Token expired");
+          localStorage.removeItem("token"); // Remove the expired token
+          return router.push("/admin");
+        }
 
-              const data = await response.json();
-          if (response.ok) {
-            toast.success("Bid Placed Successsfully", {
-              position: "top-right",
-            });
-            dispatch(fetchAllLots());
-            setIsOpen(false);
-          } else {
-            toast.error(data.error, { position: "top-right" });
-          }
-
-          } catch (error) {
-            console.error("Error during Bid Place by admin add:", error);
-            toast.error("Bid Update failed", { position: "top-right" });
-          }
-          finally {
-            setCompLoading(false);
-          }
-
+        const data = await response.json();
+        if (response.ok) {
+          toast.success("Bid Placed Successsfully", {
+            position: "top-right",
+          });
+          dispatch(fetchAllLots());
+          setIsOpen(false);
+        } else {
+          toast.error(data.error, { position: "top-right" });
+        }
+      } catch (error) {
+        console.error("Error during Bid Place by admin add:", error);
+        toast.error("Bid Update failed", { position: "top-right" });
+      } finally {
+        setCompLoading(false);
+      }
     } else {
-        toast.error("User not found", {position: "top-right"});
-        console.log("User not found");
+      console.log("User not found");
+      toast.error("User not found", { position: "top-right" });
     }
-
-  }
+  };
 
   return (
     <>
@@ -241,15 +248,16 @@ const AuctionPrData = ({ auctionId }) => {
 
               {isOpen && (
                 <div id="modal" className="modal" onClick={handleOutsideClick}>
-                  {/* Modal content */}
                   <div className="modal-content">
                     <span className="close" onClick={closeModal}>
                       &times;
                     </span>
                     <h2>Place Your Bid</h2>
                     <form onSubmit={handleNewBidSubmit} id="newBidForm">
-                      <div>
-                        <label htmlFor="newBid" className="newBidLabel">New Bid: </label>
+                      <div className="form-group">
+                        <label htmlFor="newBid" className="newBidLabel">
+                          New Bid:
+                        </label>
                         <input
                           type="number"
                           id="newBid"
@@ -259,8 +267,10 @@ const AuctionPrData = ({ auctionId }) => {
                           required
                         />
                       </div>
-                      <div>
-                        <label htmlFor="handleName" className="newBidLabel">Handle Name: </label>
+                      <div className="form-group">
+                        <label htmlFor="handleName" className="newBidLabel">
+                          Handle Name:
+                        </label>
                         <input
                           type="text"
                           id="handleName"
@@ -275,6 +285,7 @@ const AuctionPrData = ({ auctionId }) => {
                   </div>
                 </div>
               )}
+
               <div className="row pt-40">
                 <div className="col-lg-12">
                   <div className="custom-pagination-area">

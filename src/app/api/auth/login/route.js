@@ -38,7 +38,7 @@ export async function POST(req) {
       const password = formData.get("password");
       // Check if the user exists in the database
       const [user] = await db.execute(
-        "SELECT * FROM register WHERE handlename = ?",
+        "SELECT * FROM user WHERE handlename = ?",
         [handlename]
       );
 

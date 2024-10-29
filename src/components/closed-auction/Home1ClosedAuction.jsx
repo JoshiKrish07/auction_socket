@@ -9,31 +9,28 @@ import SwiperCore, {
 } from "swiper";
 import Link from "next/link";
 SwiperCore.use([Autoplay, EffectFade, Navigation, Pagination]);
-import AuctionCard from "../auction/auction-card";
 import { useEffect, useMemo, useState } from "react";
-import { useCountdownTimer } from "@/customHooks/useCountdownTimer";
 import Shimmer from "../shimmer-ui/Shimmer";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../loader/Loader";
 import io from "socket.io-client";
-import { fetchUpcomingAuctions } from "@/store/slices/upcomingAuctionsSlices";
 import { fetchAllAuctions } from "@/store/slices/allDataSlice";
 import getReadableDate from "@/utils/getReadableDate";
 
 const socket = io("http://localhost:4000"); // calling socket server
 
-const Home1UpcomingAuction = () => {
+const Home1ClosedAuction = () => {
 
   const dispatch = useDispatch();
  
   const { data: auctionLists, loading, error } = useSelector((state) => state.tablesData.allauctions);
   
-  useEffect(() => {
-      // if allAuctions is empty
-      if (auctionLists.length === 0) {
-          dispatch(fetchAllAuctions());
-      }
-  },[dispatch, auctionLists]);
+//   useEffect(() => {
+//       // if allAuctions is empty
+//       if (auctionLists.length === 0) {
+//           dispatch(fetchAllAuctions());
+//       }
+//   },[dispatch, auctionLists]);
 
   console.log("=====auctionLists=====>", auctionLists);
   socket.on("connect_error", async (err) => {
@@ -94,7 +91,7 @@ const Home1UpcomingAuction = () => {
             <div className="col-lg-12 d-flex align-items-center justify-content-between flex-wrap gap-3">
               <div className="section-title">
                 <h2>
-                  Upcoming <span>Auctions</span>
+                  Closed <span>Auctions</span>
                 </h2>
               </div>
               <div className="slider-btn-grp">
@@ -132,10 +129,10 @@ const Home1UpcomingAuction = () => {
                   <Swiper {...settings} className="swiper auction-slider">
                     <div className="swiper-wrapper">
                       {auctionLists &&
-                      auctionLists.data.filter((auct) => auct.auct_status === "UPCOMING")
+                      auctionLists.data.filter((auct) => auct.auct_status === "CLOSED")
                         .length > 0 ? (
                         auctionLists.data
-                          .filter((auct) => auct.auct_status === "UPCOMING")
+                          .filter((auct) => auct.auct_status === "CLOSED")
                           .map((auct) => (
                             <SwiperSlide
                               key={auct.auct_id}
@@ -143,7 +140,6 @@ const Home1UpcomingAuction = () => {
                             >
                               <div className="auction-card">
                                 <div className="auction-card-img-wrap">
-                                 
                                     <img
                                       src={auct?.image_address}
                                       alt=""
@@ -151,11 +147,11 @@ const Home1UpcomingAuction = () => {
                                       width='100%'
                                     />
                                   <div className="batch">
-                                    <span className="upcoming">
+                                    <span className="close">
                                     <svg width={9} height={9} viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M0.731707 3.29268H0V7.46341C0 8.30488 0.695122 9 1.53659 9H7.46341C8.30488 9 9 8.30488 9 7.46341V3.29268H8.26829H0.731707ZM5.67073 4.84756C5.79878 4.70122 6.05488 4.71951 6.18293 4.84756C6.58537 5.21341 6.96951 5.57927 7.37195 5.96342C7.51829 6.10976 7.5 6.34756 7.37195 6.47561C7.0061 6.87805 6.64024 7.2622 6.2561 7.66463C6.10976 7.81098 5.87195 7.79268 5.7439 7.66463C5.59756 7.53659 5.61585 7.28049 5.7439 7.15244C6.01829 6.84146 6.31098 6.54878 6.58537 6.23781C6.27439 5.94512 5.96341 5.65244 5.65244 5.37805C5.5061 5.21342 5.52439 4.97561 5.67073 4.84756ZM4.20732 4.84756C4.33537 4.70122 4.59146 4.71951 4.71951 4.84756C5.12195 5.21341 5.5061 5.57927 5.90854 5.96342C6.05488 6.10976 6.03658 6.34756 5.90854 6.47561C5.54268 6.87805 5.17683 7.2622 4.79268 7.66463C4.64634 7.81098 4.40854 7.79268 4.28049 7.66463C4.13415 7.53659 4.15244 7.28049 4.28049 7.15244C4.55488 6.84146 4.84756 6.54878 5.12195 6.23781C4.81098 5.94512 4.5 5.65244 4.18902 5.37805C4.04268 5.21342 4.06098 4.97561 4.20732 4.84756ZM8.26829 2.56098H9V1.53659C9 0.713415 8.34146 0.0365854 7.51829 0V0.841463C7.51829 1.04268 7.35366 1.20732 7.15244 1.20732C6.95122 1.20732 6.78658 1.02439 6.78658 0.841463V0H2.26829V0.804878C2.26829 1.0061 2.10366 1.17073 1.90244 1.17073C1.70122 1.17073 1.53659 0.987805 1.53659 0.804878V0C0.695122 0 0 0.695122 0 1.53659V2.56098H0.731707H8.26829Z" />
                                   </svg>
-                                      Upcoming
+                                      Closed
                                     </span>
                                   </div>
                                   <ul className="view-and-favorite-area">
@@ -200,17 +196,17 @@ const Home1UpcomingAuction = () => {
 
                                   </h6>
                                   <div className="price-and-code-area">
-                                    <div className="price">
+                                    {/* <div className="price">
                                       <span>Start Date: </span>
                                       <strong>{getReadableDate(auct?.start_date)}</strong>
-                                    </div>
+                                    </div> */}
                                     <div className="code">
                                       <span>Auction # {auct?.auct_code}</span>
                                     </div>
                                   </div>
                                     <div className="author-and-btn-area">
                                       <Link
-                                        href={Boolean(localStorage.getItem('token')) ? `/upcoming-auction/${auct.auct_id}` : '/login'}
+                                        href={Boolean(localStorage.getItem('token')) ? `/closed-auction/${auct.auct_id}` : '/login'}
                                         className="bid-btn"
                                       >
                                         View Lots
@@ -253,4 +249,4 @@ const Home1UpcomingAuction = () => {
   );
 };
 
-export default Home1UpcomingAuction;
+export default Home1ClosedAuction;

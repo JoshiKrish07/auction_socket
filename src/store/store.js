@@ -5,6 +5,7 @@ import authReducer from './slices/authSlices';
 import bidDisplay from './slices/bidDisplaySlice';
 import userBidsDisplay from './slices/userBidsSlice';
 import allDataSlices from './slices/allDataSlice';
+import upcomingAuctionReducer from './slices/upcomingAuctionsSlices';
 
 const store = configureStore({
   reducer: {
@@ -12,7 +13,8 @@ const store = configureStore({
     auth: authReducer,
     biddisplay: bidDisplay,
     userProfile: userBidsDisplay,
-    tablesData: allDataSlices
+    tablesData: allDataSlices,
+    upcomingAuctions: upcomingAuctionReducer
   },
 });
 

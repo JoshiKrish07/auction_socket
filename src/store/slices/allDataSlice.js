@@ -2,27 +2,27 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 // Thunks for API calls
 export const fetchAllUsers = createAsyncThunk('allData/fetchAllUsers', async () => {
-    const response = await fetch('/api/allusers'); // Replace with actual API endpoint
+    const response = await fetch('/api/allusers'); 
     return response.json();
 });
 
 export const fetchAllAuctions = createAsyncThunk('allData/fetchAllAuctions', async () => {
-    const response = await fetch('/api/all-auctions'); // Replace with actual API endpoint
+    const response = await fetch('/api/all-auctions'); 
     return response.json();
 });
 
 export const fetchAllLots = createAsyncThunk('allData/fetchAllLots', async () => {
-    const response = await fetch('/api/lot-details'); // Replace with actual API endpoint
+    const response = await fetch('/api/lot-details'); 
     return response.json();
 });
 
 export const fetchAllCategories = createAsyncThunk('allData/fetchAllCategories', async () => {
-    const response = await fetch('/api/category'); // Replace with actual API endpoint
+    const response = await fetch('/api/category'); 
     return response.json();
 });
 
 export const fetchAllMaterials = createAsyncThunk('allData/fetchAllMaterials', async () => {
-    const response = await fetch('/api/materials'); // Replace with actual API endpoint
+    const response = await fetch('/api/materials'); 
     return response.json();
 });
 

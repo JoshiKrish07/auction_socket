@@ -3,6 +3,7 @@ import Home1Banner from "@/components/banner/Home1Banner";
 import Home1Banner2 from "@/components/banner/Home1Banner2";
 import Home1Blog from "@/components/blog/Home1Blog";
 import Home1Category from "@/components/category/Home1Category";
+import Home1ClosedAuction from "@/components/closed-auction/Home1ClosedAuction";
 import Home1Faq from "@/components/faq/Home1Faq";
 import Footer from "@/components/footer/Footer";
 import Header from "@/components/header/Header";
@@ -12,12 +13,7 @@ import Home1LogoSection from "@/components/logo-section/Home1LogoSection";
 import Home1ProcessSection from "@/components/process-section/Home1ProcessSection";
 import Home1Testimonial from "@/components/testimonial/Home1Testimonial";
 import Home1UpcomingAuction from "@/components/upcoming-auction/Home1UpcomingAuction";
-// export const metadata = {
-//   icons: {
-//     icon: "/assets/img/fav-icon.svg",
-//     title:"Probid- Multi Vendor Auction and Bidding Next js Template."
-//   },
-// };
+
 export const metadata = {
   title: "Bhargava Auctions",
   icons: {
@@ -30,11 +26,12 @@ export default function Home() {
       <Header />
       <Home1Banner />
       <Home1LiveAuction />
+      <Home1UpcomingAuction />
+      <Home1ClosedAuction />
       {/* <Home1Category />
       <Home1LatestAuction />
       <Home1Banner2 />
       <Home1About />
-      <Home1UpcomingAuction />
       <Home1ProcessSection />
       <Home1LogoSection />
       <Home1Faq />

@@ -84,7 +84,7 @@ export async function POST(req) {
 
 
     const [existingUser] = await db.execute(
-      "SELECT * FROM register WHERE email = ? OR handlename = ?",
+      "SELECT * FROM user WHERE email = ? OR handlename = ?",
       [email, handlename]
     );
 
@@ -113,9 +113,17 @@ export async function POST(req) {
     ];
 
     const [result] = await db.execute(
-      "INSERT INTO register (name, email, password, mobile, address, state, pincode, profileimage, handlename) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "INSERT INTO user (name, email, password, mobile, address, state, pincode, profileimage, handlename) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
       valuesToInsert
     );
+
+   
+    if (result.affectedRows === 0) {
+      return new Response(
+        JSON.stringify({ message: "Registration not completed, please try again." }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
 
     return new Response(
       JSON.stringify({ message: "User registered successfully" }),

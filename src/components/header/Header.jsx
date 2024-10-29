@@ -69,6 +69,7 @@ const Header = ({adminLogin}) => {
   const handleLanguageClick = (index) => {
     setMenuOpen(false); // Close the menu when an item is clicked
   };
+  
   useEffect(() => {
 
     const fetchUserProfile = async () => {

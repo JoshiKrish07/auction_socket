@@ -40,7 +40,7 @@ const AdminUsersList = () => {
                       <th>Name</th>
                       <th>E-Mail</th>
                       <th>Address</th>
-                      <th>Pincode</th>
+                      <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -56,7 +56,9 @@ const AdminUsersList = () => {
                                                 <span>Winning</span>
                                             </td> */}
                                             <td data-label="Address">{user.address}</td>
-                                            <td data-label="Pincode">{user.pincode}</td>
+                                            <td data-label="Action">
+                                              <button className="btn btn-primary">Edit</button>
+                                            </td>
                                     </tr>
                             )
                         })

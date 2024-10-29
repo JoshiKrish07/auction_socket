@@ -26,6 +26,7 @@ const HandleQuantity = ({
   initialQuantity,
   currentQuantity,
   onPlaceBid,
+  auctionStatus
 }) => {
   const [quantityState, dispatchQuantityReducer] = useReducer(quantityReducer, {
     quantity: initialQuantity,
@@ -97,7 +98,13 @@ const HandleQuantity = ({
       <button
         className="primary-btn btn-hover"
         onClick={handlePlaceBid}
-        style={{ display: "flex", justifyContent: "center" }}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          opacity: auctionStatus !== 'LIVE' ? 0.5 : 1,
+          cursor: auctionStatus !== 'LIVE' ? 'not-allowed' : 'pointer',
+        }}
+        disabled={auctionStatus !== 'LIVE'}
       >
         Place Bid
         <span style={{ top: "40.5px", left: "84.2344px" }} />

@@ -13,7 +13,7 @@ export async function GET(req) {
   try {
     const decodeUser = verifyToken(token);
     const userId = decodeUser.id;
-    // const [result] = await db.query("SELECT * FROM register WHERE id = ?", [
+    // const [result] = await db.query("SELECT * FROM user WHERE id = ?", [
     //   userId,
     // ]);
 
@@ -21,13 +21,16 @@ export async function GET(req) {
       `SELECT 
           r.*, 
           bd.*, 
-          ld.*
+          ld.*,
+          ad.auct_status
        FROM 
-          register r 
+          user r 
        LEFT JOIN 
           bid_detail bd ON r.id = bd.bid_owner_id 
        LEFT JOIN 
-          lot_detail ld ON bd.bid_lot_id = ld.lot_id 
+          lot_detail ld ON bd.bid_lot_id = ld.lot_id
+       LEFT JOIN 
+          auction_detail ad ON ld.lot_auct_id = ad.auct_id 
        WHERE 
           r.id = ?`, 
       [userId]
@@ -94,7 +97,7 @@ export async function PUT(req) {
       }
 
       const hashedPassword = await bcrypt.hash(newPassword, 10);
-      const updateQuery = `UPDATE register SET password = ? WHERE id = ?`;
+      const updateQuery = `UPDATE user SET password = ? WHERE id = ?`;
       await db.execute(updateQuery, [hashedPassword, user.id]);
 
       return new Response(
@@ -177,7 +180,7 @@ export async function PUT(req) {
     valuesToUpdate.push(user.id);
 
     if (updateFields.length > 0) {
-      const query = `UPDATE register SET ${updateFields.join(", ")} WHERE id = ?`;
+      const query = `UPDATE user SET ${updateFields.join(", ")} WHERE id = ?`;
       await db.execute(query, valuesToUpdate);
     }
 

@@ -17,7 +17,7 @@ export async function GET(req) {
       // );
 
       const [rows] = await db.execute(
-        `SELECT ld.*, m.mat_name, c.cat_name, ad.end_date, bd.bd_next_bid, bd.bd_current_bid
+        `SELECT ld.*, m.mat_name, c.cat_name, ad.auct_status, ad.end_date, bd.bd_next_bid, bd.bd_current_bid
          FROM lot_detail AS ld
          LEFT JOIN material AS m ON ld.lot_mat_id = m.mat_id
          LEFT JOIN category AS c ON ld.lot_cat_id = c.cat_id

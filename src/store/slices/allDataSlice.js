@@ -2,18 +2,51 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 // Thunks for API calls
 export const fetchAllUsers = createAsyncThunk('allData/fetchAllUsers', async () => {
-    const response = await fetch('/api/allusers'); 
-    return response.json();
+    const response = await fetch('/api/allusers', {
+        method: 'GET',
+        headers: {
+            'Cache-Control': 'no-store', // Prevent caching
+        },
+    });
+    console.log("===response in fetchallusers====>", response);
+    if (!response.ok) {
+        throw new Error('Failed to fetch users');
+    }
+
+    const data = await response.json();
+    return data; // Return the parsed JSON data
 });
 
 export const fetchAllAuctions = createAsyncThunk('allData/fetchAllAuctions', async () => {
-    const response = await fetch('/api/all-auctions'); 
-    return response.json();
+    const response = await fetch('/api/all-auctions', {
+        method: 'GET',
+        headers: {
+            'Cache-Control': 'no-store', // Prevent caching
+        },
+    });
+    console.log("===response in fetchallauctions====>", response);
+    if (!response.ok) {
+        throw new Error('Failed to fetch auctions');
+    }
+
+    const data = await response.json();
+    return data; // Return the parsed JSON data
 });
 
 export const fetchAllLots = createAsyncThunk('allData/fetchAllLots', async () => {
-    const response = await fetch('/api/lot-details'); 
-    return response.json();
+    const response = await fetch('/api/lot-details', {
+        method: 'GET',
+        headers: {
+            'Cache-Control': 'no-store', // Prevent caching
+        },
+    });
+    console.log("===response in fetchallLots====>", response);
+    if (!response.ok) {
+        throw new Error('Failed to fetch lots');
+    }
+
+    const data = await response.json();
+    return data; // Return the parsed JSON data
 });
 
 export const fetchAllCategories = createAsyncThunk('allData/fetchAllCategories', async () => {

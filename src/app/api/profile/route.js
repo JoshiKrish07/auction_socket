@@ -4,11 +4,23 @@ import { verifyToken } from "@/utils/verifytoken";
 import cors from "@/lib/cors";
 import uploadImgToCloudinary from "@/lib/cloudinary";
 
+// Ensure Next.js treats this route as dynamic
+export const dynamic = 'force-dynamic';
+
 export async function GET(req) {
+
+  // Handle CORS headers
+  const corsHeaders = cors(req);
+
+  // Return early for preflight requests
+  if (req.method === "OPTIONS") {
+    return new Response(null, { status: 204, headers: corsHeaders });
+  }
+
   const token = req.headers.get("Authorization")?.split(" ")[1];
   // console.log("===token====>", token)
   if (!token)
-    return NextResponse.json({ message: "No token provided" }, { status: 401 });
+    return NextResponse.json({ message: "No token provided" }, { status: 401, headers: corsHeaders });
 
   try {
     const decodeUser = verifyToken(token);
@@ -37,18 +49,26 @@ export async function GET(req) {
     );
 
     if (results.length === 0) {
-      return NextResponse.json({ message: "User not found" }, { status: 404 });
+      return NextResponse.json({ message: "User not found" }, { status: 404, headers: corsHeaders });
     }
 
     const { password, ...userWithoutPassword } = results;
 
-    return NextResponse.json({ user: userWithoutPassword }, { status: 200 });
+    return NextResponse.json({ user: userWithoutPassword },
+      {
+        status: 200,
+        headers: {
+          ...corsHeaders,
+          "Cache-Control": "no-store, max-age=0, must-revalidate",
+        },
+      }
+    );
   } catch (error) {
     console.log("error in profile", error);
     if(error.message === "Invalid token" || error.message === "Token has expired") {
-        return NextResponse.json({ message: error.message }, { status: 401 });
+        return NextResponse.json({ message: error.message }, { status: 401, headers: corsHeaders });
     } else {
-        return NextResponse.json({ message: error.message }, { status: 500 });
+        return NextResponse.json({ message: error.message }, { status: 500, headers: corsHeaders });
     }
   }
 }

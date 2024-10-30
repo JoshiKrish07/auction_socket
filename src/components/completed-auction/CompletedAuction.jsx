@@ -33,9 +33,9 @@ const CompletedAuctions = () => {
     error,
   } = useSelector((state) => state.auction);
 
-  socket.on("connect_error", async (err) => {
-    console.log(`connect_error due to ${err.message}`);
-  });
+  // socket.on("connect_error", async (err) => {
+  //   console.log(`connect_error due to ${err.message}`);
+  // });
 
   const settings = useMemo(() => {
     return {

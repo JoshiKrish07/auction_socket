@@ -13,7 +13,6 @@ export const metadata = {
 const ClosedAuctionLotPage = ({params}) => {
 
     const { id } = params;
-    console.log("======id===on closed Auction lot Page==>", id);
 
   return (
     <>

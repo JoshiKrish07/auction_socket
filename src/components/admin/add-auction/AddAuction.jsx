@@ -7,6 +7,7 @@ import "./AddAuction.css";
 import AdminSideBar from "../admindashboard/AdminSideBar";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAuctionDetails } from "@/store/slices/auctionSlices";
+import { fetchAllAuctions } from "@/store/slices/allDataSlice";
 
 const AddAuction = ({auctionId}) => {
   const router = useRouter();
@@ -44,8 +45,12 @@ const AddAuction = ({auctionId}) => {
           auct_location: auctionDetail?.auct_location,
           auct_detail: auctionDetail?.auct_detail,
           auct_image: auctionDetail?.image_address,
-          auct_start_date: auctionDetail?.start_date,
-          auct_end_date: auctionDetail?.end_date,
+          auct_start_date: auctionDetail?.start_date 
+            ? new Date(auctionDetail.start_date).toISOString().slice(0, 19).replace("T", " ")
+            : "", // Formatting start date
+          auct_end_date: auctionDetail?.end_date 
+            ? new Date(auctionDetail.end_date).toISOString().slice(0, 19).replace("T", " ")
+            : "", // Formatting end date
           auct_status: auctionDetail?.auct_status,
           auct_prev_status: auctionDetail?.auct_status
         })
@@ -145,6 +150,7 @@ const AddAuction = ({auctionId}) => {
         }
 
       try {
+
         const formDataToSend = new FormData();
         Object.keys(formData).forEach((key) => {
           formDataToSend.append(key, formData[key]);
@@ -182,6 +188,7 @@ const AddAuction = ({auctionId}) => {
           toast.success("Auction added Successsfully", {
             position: "top-right",
           });
+          dispatch(fetchAllAuctions());
           router.push('/admin/dashboard');
         } else {
           toast.error(data.error, { position: "top-right" });

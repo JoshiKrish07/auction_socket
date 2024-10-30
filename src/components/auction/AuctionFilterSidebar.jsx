@@ -28,7 +28,7 @@ const AuctionFilterSidebar = ({ isMenuOpen }) => {
   return (
     <div className={`filter-sidebar ${isMenuOpen ? "slide" : ""}`}>
       <div className="auction-sidebar">
-        <form>
+        {/* <form>
           <div className="single-widget mb-30">
             <div className="search-box">
               <input type="text" placeholder="Search" />
@@ -185,7 +185,7 @@ const AuctionFilterSidebar = ({ isMenuOpen }) => {
               </ul>
             </div>
           </div>
-        </form>
+        </form> */}
         <div className="single-widget">
           <h5 className="widget-title">Highest Bidding</h5>
           <div className="highest-bidding-widget mb-20">
@@ -205,7 +205,7 @@ const AuctionFilterSidebar = ({ isMenuOpen }) => {
               </h6>
               <div className="price-area">
                 <span>Current Bid at:</span>
-                <strong>$4,648</strong>
+                <strong>₹ 4,648</strong>
               </div>
             </div>
           </div>
@@ -226,7 +226,7 @@ const AuctionFilterSidebar = ({ isMenuOpen }) => {
               </h6>
               <div className="price-area">
                 <span>Current Bid at:</span>
-                <strong>$2,458</strong>
+                <strong>₹ 2,458</strong>
               </div>
             </div>
           </div>
@@ -247,7 +247,7 @@ const AuctionFilterSidebar = ({ isMenuOpen }) => {
               </h6>
               <div className="price-area">
                 <span>Current Bid at:</span>
-                <strong>$2,878</strong>
+                <strong>₹ 2,878</strong>
               </div>
             </div>
           </div>

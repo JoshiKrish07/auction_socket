@@ -90,7 +90,11 @@ export async function POST(req) {
       return NextResponse.json({ message: 'Something went wrong' }, { status: 400 });
     }
 
-    return NextResponse.json({ data: "Bid Successfully Done" }, { status: 200 });
+    return NextResponse.json({ data: "Bid Successfully Done" }, { status: 200, headers: {
+      ...corsHeaders,
+      "Cache-Control": "no-store, max-age=0, must-revalidate",
+      },  
+    });
 
   } catch (error) {
     console.log("error in bid detail api", error);

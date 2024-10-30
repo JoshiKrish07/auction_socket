@@ -36,9 +36,9 @@ const Home1UpcomingAuction = () => {
   },[dispatch, auctionLists]);
 
   console.log("=====auctionLists=====>", auctionLists);
-  socket.on("connect_error", async (err) => {
-    console.log(`connect_error due to ${err.message}`);
-  });
+  // socket.on("connect_error", async (err) => {
+  //   console.log(`connect_error due to ${err.message}`);
+  // });
 
   const settings = useMemo(() => {
     return {

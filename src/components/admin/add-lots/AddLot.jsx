@@ -6,7 +6,7 @@ import Loader from "@/components/loader/Loader";
 import "./AddLot.css";
 import AdminSideBar from "../admindashboard/AdminSideBar";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllAuctions, fetchAllCategories, fetchAllMaterials } from "@/store/slices/allDataSlice";
+import { fetchAllAuctions, fetchAllCategories, fetchAllLots, fetchAllMaterials } from "@/store/slices/allDataSlice";
 import { fetchLotDetails } from "@/store/slices/auctionSlices";
 
 const AddLot = ({lotId}) => {
@@ -278,6 +278,7 @@ const checkAuctExist = async() => {
             categoryId: ""
           });
           setErrors({});
+          dispatch(fetchAllLots());
           toast.success("Lot added Successsfully", {
             position: "top-right",
           });
@@ -365,6 +366,7 @@ const checkAuctExist = async() => {
             toast.success("Lot Updated Successsfully", {
               position: "top-right",
             });
+            dispatch(fetchAllLots());
             router.push('/admin/dashboard');
           } else {
             toast.error(data.error, { position: "top-right" });

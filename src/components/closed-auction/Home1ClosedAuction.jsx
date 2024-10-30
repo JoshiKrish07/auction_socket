@@ -33,9 +33,9 @@ const Home1ClosedAuction = () => {
 //   },[dispatch, auctionLists]);
 
   console.log("=====auctionLists=====>", auctionLists);
-  socket.on("connect_error", async (err) => {
-    console.log(`connect_error due to ${err.message}`);
-  });
+  // socket.on("connect_error", async (err) => {
+  //   console.log(`connect_error due to ${err.message}`);
+  // });
 
   const settings = useMemo(() => {
     return {
@@ -217,7 +217,7 @@ const Home1ClosedAuction = () => {
                             </SwiperSlide>
                           ))
                       ) : (
-                        <h2>No upcoming Lots</h2>
+                        <h2>No Closed Lots</h2>
                       )}
                     </div>
                   </Swiper>
